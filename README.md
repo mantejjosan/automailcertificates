@@ -62,6 +62,14 @@ Certificates will be saved in the `generated_certificates/` folder.
 
 ### 2️⃣ Send Certificates via Email  
 
+> NOTE: Before sending the emails check the csv file path and the generated certificates path
+> in mail_participants.py file.
+> 
+> CSV_FILE = "participants_data.csv"  
+> PDF_FOLDER = "generated_certificates"
+>
+> Change the line 15, 16 in mail_participants.py file to the above two lines of code and then run the below command.
+
 Once the certificates are generated, send them via email using:  
 ```bash
 python mail_participants.py
