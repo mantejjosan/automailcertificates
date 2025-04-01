@@ -8,7 +8,7 @@ import os
 # Register fonts if needed
 # pdfmetrics.registerFont(TTFont('DejaVuSans', 'DejaVuSans.ttf'))
 
-def generate_certificates(csv_file, output_folder, background_image=None, refno=None):
+def generate_certificates(csv_file, output_folder, background_image=None, options=None):
     """
     Generate certificates from a CSV file with center-aligned text fields.
     
@@ -32,6 +32,7 @@ def generate_certificates(csv_file, output_folder, background_image=None, refno=
         name = row['name']
         branch = row['branch']
         urn = str(row['urn'])
+        refno = str(row['refNo'])
         
         # Generate filename for the certificate
         pdf_filename = f"{name.replace(' ', '_')}_{urn}_certificate.pdf"
@@ -45,19 +46,19 @@ def generate_certificates(csv_file, output_folder, background_image=None, refno=
             c.drawImage(background_image, 0, 0, width=page_width, height=page_height)
         
         # Set font
-        c.setFont("Helvetica-Bold", 16)
+        c.setFont("Helvetica-Bold", options['main_text_size'])
         
-        # Draw the ref no.
-        c.drawCentredString(page_width/8 +68, page_height/2 + 119, refno)
+        # Draw the ref no. DONT INCLUDE LINE HEIGHT HERE
+        c.drawCentredString(page_width/8 +70, page_height/2 + 119, refno)
         # Draw the name (centered)
-        c.drawCentredString(page_width/2, page_height/2 + 10, name)
-        
-        # Draw the branch (centered)
-        c.setFont("Helvetica", 14)
-        c.drawCentredString(page_width/8 + 60, page_height/2 - 25, f"{urn}")
+        c.drawCentredString(page_width/2, page_height/2 + 10 + options["line_height"], name.title())
         
         # Draw the URN (centered)
-        c.drawCentredString(page_width/2, page_height/2 - 25, f"{branch}")
+        c.setFont("Helvetica", options['sub_text_size'])
+        c.drawCentredString(page_width/8 + 60, page_height/2 - 25 + options["line_height"], f"{urn}")
+        
+        # Draw the Branch (centered)
+        c.drawCentredString(page_width/2, page_height/2 - 25 + options["line_height"], f"{branch}")
         
         # Save the certificate
         c.save()
@@ -68,5 +69,13 @@ if __name__ == "__main__":
     csv_file = "participants_data.csv"
     output_folder = "generated_certificates"
     background_image = "certificate_template.jpeg"  # Your certificate background
-    refno = 'GNDEC/NSS/19/25/01'
-    generate_certificates(csv_file, output_folder, background_image, refno)
+    
+    # print tuning
+    options = {
+        'line_height': -5,
+        'main_text_size': 18,
+        'sub_text_size': 16,
+    }
+
+    # Generate!
+    generate_certificates(csv_file, output_folder, background_image, options)
