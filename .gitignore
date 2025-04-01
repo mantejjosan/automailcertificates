@@ -1,6 +1,7 @@
 generated_certificates/
 
 certificate_template.jpeg
-
+necessities.md
 old.py
 participants_data.csv
+.env
